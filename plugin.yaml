@@ -1,0 +1,37 @@
+##################################################################################
+# Maven Node Types
+# Author: kemi
+##################################################################################
+tosca_definitions_version: cloudify_dsl_1_1
+
+plugins:
+  maven_plugin:
+    executor: host_agent
+    source: https://github.com/kemiz/maven-plugin-cfy/archive/master.zip
+
+node_types:
+
+  ##################################################################################
+  # Maven Application Type (build from source)
+  ##################################################################################
+
+  cloudify.nodes.MavenApp:
+    derived_from: cloudify.nodes.SoftwareComponent
+    properties:
+      name:
+        default: MavenApp
+      source_zip_url:
+        default: None
+      config:
+        default:
+          package_list:
+            - 'openjdk-7-jdk'
+            - 'maven2'
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: maven_plugin.maven_plugin.tasks.package
+#      mvn.operations:
+#        package: maven_plugin.maven_plugin.tasks.package
+#        build: maven_plugin.maven_plugin.tasks.package
+#        compile: maven_plugin.maven_plugin.tasks.package
+#        clean: maven_plugin.maven_plugin.tasks.package
